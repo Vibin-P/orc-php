@@ -1,16 +1,18 @@
 
-<?php header('Access-Control-Allow-Origin: *')?>
+<?php header('Access-Control-Allow-Origin: *');
+require 'db_connection.php';
+?>
 
 <?php
 
 
-	$url = "localhost";
-	$database = "orc_db" ;
-	$username ="root";
-	$password  = "";
+	//$url = "localhost";
+	//$database = "orc_db" ;
+	//$username ="root";
+	//$password  = "";
 
-	$conn  = mysqli_connect($url,$username, $password, $database);
-
+	//$conn  = mysqli_connect($url,$username, $password, $database);
+	$conn = $db_conn;
 	if(!$conn)
 	{
 		die("connection faild:" .$conn-> connect_error);
