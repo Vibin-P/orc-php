@@ -16,7 +16,9 @@ if(isset($data->start_date)
     ){
     $start_date = mysqli_real_escape_string($db_conn, trim($data->start_date));
     $end_date = mysqli_real_escape_string($db_conn, trim($data->end_date));
-        $insertUser = mysqli_query($db_conn,"SELECT * FROM data WHERE date_Time BETWEEN '" . $start_date . "' AND  '" . $end_date . "' ORDER by data_id DESC");
+    $start_date_formatted = date_format(date_create($start_date), 'Y-m-d H:i:s');
+    $end_date_formatted = date_format(date_create($end_date), 'Y-m-d H:i:s');
+        $insertUser = mysqli_query($db_conn,"SELECT * FROM data WHERE date_Time BETWEEN '" . $start_date_formatted . "' AND  '" . $end_date_formatted . "' ORDER by data_id DESC");
 
         $count = mysqli_num_rows($insertUser);  
         $rows  = array();
