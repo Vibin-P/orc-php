@@ -27,7 +27,9 @@ if(isset($_GET['start_date'])
         $report_type = $_GET['type'];
         $start_date = mysqli_real_escape_string($db_conn, trim($_GET['start_date']));
         $end_date = mysqli_real_escape_string($db_conn, trim($_GET['end_date']));
-        $insertUser = mysqli_query($db_conn,"SELECT * FROM data WHERE date_Time BETWEEN '" . $start_date . "' AND  '" . $end_date . "' ORDER by data_id DESC");
+        $start_date_formatted = date_format(date_create($start_date), 'Y-m-d H:i:s');
+        $end_date_formatted = date_format(date_create($end_date), 'Y-m-d H:i:s');
+        $insertUser = mysqli_query($db_conn,"SELECT * FROM data WHERE date_Time BETWEEN '" . $start_date_formatted . "' AND  '" . $end_date_formatted . "' ORDER by data_id DESC");
 
         $count = mysqli_num_rows($insertUser);
 
@@ -40,14 +42,14 @@ if(isset($_GET['start_date'])
             $sheet->setCellValueByColumnAndRow(1, $row, COMPANY_NAME);
             $row++;
             $sheet->setCellValueByColumnAndRow(1, $row, 'From:');
-            $sheet->setCellValueByColumnAndRow(2, $row, $start_date);
+            $sheet->setCellValueByColumnAndRow(2, $row, date_format(date_create($start_date), 'd-m-Y H:i:s A'));
             $sheet->setCellValueByColumnAndRow(4, $row, 'Print By');
             $sheet->setCellValueByColumnAndRow(5, $row, '');
             $row++;
             $sheet->setCellValueByColumnAndRow(1, $row, 'To:');
-            $sheet->setCellValueByColumnAndRow(2, $row, $end_date);
+            $sheet->setCellValueByColumnAndRow(2, $row, date_format(date_create($end_date), 'd-m-Y H:i:s A'));
             $sheet->setCellValueByColumnAndRow(4, $row, 'Print Date');
-            $sheet->setCellValueByColumnAndRow(5, $row, date("h:i:s A"));
+            $sheet->setCellValueByColumnAndRow(5, $row, date("d-m-Y H:i:s A"));
             $row++;
             $sheet->getStyle('A4:E4')->getFont()->setBold(true);
             foreach(range('A4','E4') as $columnID) {
@@ -92,7 +94,7 @@ if(isset($_GET['start_date'])
             <table style="width: 100%">
             <tr>
             <td>
-            From:'.$start_date.'
+            From:'.date_format(date_create($start_date), 'd-m-Y H:i:s A').'
             </td>
             <td>
             Print By:
@@ -100,10 +102,10 @@ if(isset($_GET['start_date'])
             </tr>
             <tr>
             <td>
-            To:'.$end_date.'
+            To:'.date_format(date_create($end_date), 'd-m-Y H:i:s A').'
             </td>
             <td>
-            Print Date:'.date("h:i:s A").'
+            Print Date:'.date("d-m-Y H:i:s A").'
             </td>
             </tr>
             </table>
