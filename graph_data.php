@@ -14,11 +14,20 @@ if(isset($data->start_date)
     && !empty(trim($data->start_date)) 
     && !empty(trim($data->end_date))
     ){
-    $start_date = mysqli_real_escape_string($db_conn, trim($data->start_date));
-    $end_date = mysqli_real_escape_string($db_conn, trim($data->end_date));
-    $start_date_formatted = date_format(date_create($start_date), 'Y-m-d H:i:s');
-    $end_date_formatted = date_format(date_create($end_date), 'Y-m-d H:i:s');
-        $insertUser = mysqli_query($db_conn,"SELECT * FROM data WHERE date_Time BETWEEN '" . $start_date_formatted . "' AND  '" . $end_date_formatted . "' ORDER by data_id DESC");
+        
+        $currentPage = $_GET['currentPage'];
+        $recordsPerPage = $_GET['recordsPerPage'];
+        $nextPage = $currentPage*$recordsPerPage;
+        $start_date = mysqli_real_escape_string($db_conn, trim($data->start_date));
+        $end_date = mysqli_real_escape_string($db_conn, trim($data->end_date));
+        
+        $start_date_formatted = date_format(date_create($start_date), 'Y-m-d H:i:s');
+        $end_date_formatted = date_format(date_create($end_date), 'Y-m-d H:i:s');
+        
+        $countRow = mysqli_query($db_conn, "SELECT COUNT(*) AS totalCount FROM data WHERE date_Time BETWEEN '" . $start_date_formatted . "' AND  '" . $end_date_formatted."'");
+        $totalCount = mysqli_fetch_assoc($countRow);
+
+        $insertUser = mysqli_query($db_conn,"SELECT * FROM data WHERE date_Time BETWEEN '" . $start_date_formatted . "' AND  '" . $end_date_formatted . "' ORDER by data_id DESC limit ".$recordsPerPage." offset ".$nextPage);
 
         $count = mysqli_num_rows($insertUser);  
         $rows  = array();
@@ -28,7 +37,9 @@ if(isset($data->start_date)
             # code...
             }  
             //$last_id = mysqli_insert_id($db_conn);
-            print json_encode($rows);
+            $output = array('totalCount'=>$totalCount['totalCount'], 'records'=>$rows);
+
+            print json_encode($output);
 
             //echo json_encode(["Login success"]);
         }
