@@ -77,6 +77,8 @@ if(isset($_GET['start_date'])
             }
         } else if($report_type == "pdf") {
             $mpdf = new \Mpdf\Mpdf();
+            $mpdf->useSubstitutions = false;
+            $mpdf->simpleTables = true;
             $html = '
             <html>
             <head>
